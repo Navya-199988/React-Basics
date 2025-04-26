@@ -1,0 +1,222 @@
+ React Hooks are one of the most powerful and popular features in React — they let you use state and lifecycle features inside functional components (instead of writing class components).
+🔍 What Are React Hooks?
+Hooks are functions that let you “hook into” React features like state, side effects, refs, and more.
+
+They were introduced in React 16.8 and allow functional components to do everything by class components can do — but cleaner.
+🎣 Most Common React Hooks (with examples)
+1. useState() – To Store & Update State
+
+import { useState } from "react";
+function Counter() {
+  const [count, setCount] = useState(0); // Initial state is 0
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Add</button>
+    </div>
+  );
+}
+OR
+import React,{useState} from react;
+function Counter(){
+  const [count, setCount] = useState(0);
+  function increment(){
+    setCount(count+1);
+  }
+  return (
+    <button onClick = {increment}>count:{count}</button>
+  )
+}
+export default Counter;
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+2.useEffect((),return,[])
+
+useEffect is one of the most important and powerful hooks in React — it's used to handle side effects in your components.
+🎣 What is useEffect?
+👉 It lets you run code after the component renders.
+This includes:
+🛠 Fetching data (API calls)
+🧹 Setting up or cleaning up things (like event listeners, timers)
+💾 Interacting with the DOM (like focusing an input);
+
+useEffect(() => {
+  // Your side-effect code here
+
+  return () => {
+    // (optional) Cleanup code goes here
+  };
+}, [dependencies]);
+
+
+✅ useEffect Full Structure:
+js
+useEffect(() => {
+  // 🟢 1. Main effect logic (runs after render)
+
+  return () => {
+    // 🔴 2. Optional cleanup logic (runs before unmount or before next effect)
+  };
+}, [/* 🟡 3. Dependency array */]);
+💡 Each part explained:
+🟢 1. Callback Function (Main Effect)
+This is where you put the side effect code:
+API calls
+Timers
+DOM changes
+Subscriptions
+
+🔴 2. Return Function (Cleanup - Optional)
+This is called:
+Just before the component unmounts (disappears)
+Or before re-running the effect (if dependencies changed)
+Used to:
+Clear timers
+Remove event listeners
+Cancel network requests
+
+🟡 3. Dependency Array
+Tells React when to re-run the effect
+Common options:
+[] → run once
+[count] → run when count changes
+no array → run on every render (usually not recommended)
+
+✅ Simple Example: Logging on count change
+js
+useEffect(() => {
+  console.log("Count changed!");
+
+  return () => {
+    console.log("Cleaning up...");
+  };
+}, [count]);
+
+
+🔄 When does useEffect run?
+It depends on the dependencies array (the second argument):
+
+1️⃣ No second argument → runs after every render
+jsx
+Copy
+Edit
+useEffect(() => {
+  console.log("I run after every render");
+});
+2️⃣ Empty array [] → runs only once (like componentDidMount)
+jsx
+Copy
+Edit
+useEffect(() => {
+  console.log("I run only once when the component mounts");
+}, []);
+3️⃣ With dependencies → runs only when those values change
+jsx
+Copy
+Edit
+useEffect(() => {
+  console.log("Runs only when `count` changes");
+}, [count]);
+⚙️ Common Use Cases
+🔹 1. Fetch data on component mount
+jsx
+Copy
+Edit
+useEffect(() => {
+  fetch("https://api.example.com/data")
+    .then((res) => res.json())
+    .then((data) => console.log(data));
+}, []); // only once
+🔹 2. Set up a timer or interval
+jsx
+Copy
+Edit
+useEffect(() => {
+  const timer = setInterval(() => {
+    console.log("Tick");
+  }, 1000);
+
+  return () => clearInterval(timer); // cleanup on unmount
+}, []);
+🔹 3. Cleanup an event listener
+jsx
+Copy
+Edit
+useEffect(() => {
+  const handleClick = () => alert("Clicked!");
+  window.addEventListener("click", handleClick);
+
+  return () => {
+    window.removeEventListener("click", handleClick); // cleanup
+  };
+}, []);
+🧼 Why is the cleanup function important?
+Without it, you could cause:
+
+Memory leaks
+
+Multiple intervals stacking
+
+Extra event listeners
+
+Think of it like turning off a light when you leave a room.
+
+📦 Full Example: Counter with document title
+jsx
+Copy
+Edit
+import { useState, useEffect } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // Side effect: set document title
+    document.title = `Count is ${count}`;
+  }, [count]); // Only runs when `count` changes
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+}
+🧠 Summary
+
+Trigger	                 Dependency Array                     	When It Runs
+Every render	                 (none)                      	After every render
+On mount only	                   []	                  Just once after first render
+On value change          	[var1, var2]	             Only when var1 or var2 changes
+With cleanup	          Return a function	           Runs during unmount or re-render
+********************************************************************************************************************************
+ When we talk about “maintaining side effects” in React — especially in the context of useEffect — we mean:
+
+💡 What is a "Side Effect"?
+In React, a side effect is anything that happens outside the component’s rendering logic.
+
+Examples of side effects:
+✅ Fetching data from an API
+
+✅ Setting a timer (setTimeout, setInterval)
+
+✅ Manually changing the DOM (like focusing an input)
+
+✅ Subscribing to a WebSocket or event
+
+✅ Logging to the console
+
+✅ Updating the document.title
+
+✅ Working with localStorage or cookies
+
+✅ Why Do We Need to Maintain Side Effects?
+Because side effects live outside React’s core rendering process, they need special handling:
+
+To start them at the right time (e.g., after render)
+
+To stop/clean them when they're no longer needed (to avoid bugs or memory leaks)
+
+That’s where useEffect comes in.
+
+
