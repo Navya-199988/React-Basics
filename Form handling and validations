@@ -1,0 +1,83 @@
+BASIC FORM CREATION (HANDLING)--------------------------------------------------
+function basicForm() {
+  const [input, setInput] = useState({
+    name: "",
+    email: "",
+    age: "",
+    password: ""
+  });
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setInput(prev => ({
+      ...prev,
+      [name]:value
+    }));
+  };
+  const handleSubmit =(e)=>{
+    e.preventDefault();
+    if(!input.name || !input.email.includes("@")){
+      alert ("please enter valid input");
+    }
+    console.log(input)
+  };
+  return(
+    <form onSubmit={handleSubmit}>
+      <input type="text" name= "name" placeholder="name" onChange={handleChange} value={input.name}/>
+      <input type="text"
+             name="email"
+             value={input.email}
+             onChange={handleChange}
+             placeholder="email"
+       />;
+       <input type="text"
+              name="age"
+              value={input.age}
+              onChange={handleChange}
+              placeholder="age"
+       />;
+       <input type="text"
+              name="password"
+              value={input.password}
+              onChange={handleChange}
+              placeholder="password"
+       />;
+       <button onSubmit={handleSubmit}>Submit</button>
+
+    </form>
+  )
+};
+export default basicForm;
+
+********************************************************************************************************************************************************************************
+
+-------------bASIC && validating inputs in forms------------------------------
+-------------using react-hookform-----------------------
+import {useForm} from "react-hook-form";
+function hookForm(){
+  const{register, handleSubmit, formState:{errors}}= useForm();
+
+  const onSubmit=(data)=>{
+    console.log(data)
+  };
+  return(
+    <form onSubmit={handleSubmit(onsubmit)}>
+      <input 
+      {...register("name",{required:"name is required"})} 
+      placeholder="name"/>
+      {errors.name && <p>errors.name.messages</p> };
+
+      <input 
+      {...register("email",{required:"email is required",
+        pattern: {
+          value:/^\S+@\S+$/i,
+          message: "invalid email address"
+        }
+      })}
+      placeholder="email" />
+      {errors.email && <p>{errors.email.message}</p> };
+      <button type="submit">submit</button>
+
+    </form>
+  )
+};
+export default hookForm;
