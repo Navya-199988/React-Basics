@@ -1,3 +1,4 @@
+FORM HANDLING AND VALIDATION FULL ONE PROJECT USING REACT-HOOK-FORM(VERY IMP CONCEPT) PRESENT ATLAST --->NAME:USER REGISTRAION
 BASIC FORM CREATION (HANDLING)--------------------------------------------------
 function basicForm() {
   const [input, setInput] = useState({
@@ -338,6 +339,107 @@ Now, name acts like a key, and you don't need multiple onChange functions.
 
 ⚠️ If you don’t use name, you can't dynamically tell which field was changed.
 }
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+--------------USER REGISTRATION FORM---------------------------- FORM HANDLING AND VALIDATION FULL ONE PROJECT USING REACT-HOOK-FORM(VERY IMP CONCEPT)---------------
+import {useForm} from 'react-hook-form';
+function RegistrationForm(){
+  const {register,
+        handleSubmit, 
+        watch,
+        formState:{errors}} = useForm();
+  
+  const onSubmit = (data)=>{
+    console.log(data);
+    alert("signupsucssfully");
+  }
+  const password = watch("password");
+  return(
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register("name",{required:"name is mandatory"})}
+      placeholder="name" />
+      {errors.name && <p>{errors.name.message}</p>}
+
+      <input {...register("email",{required: "email is mandatory", 
+        pattern:{
+          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+          message:"invalid email"
+        }
+      })}
+      placeholder="email" />
+      {errors.email && <p>{errors.email.message}</p> }
+
+      <input {...register("password",{required:"password is required",
+        minLength:{
+          length:6,
+          message:"password length should be min 6 characters"
+        },
+      })}
+      placeholder="passowrd"/>
+      {errors.password &&<p>{errors.password.message}</p> }
+
+       <input {...register("confirmpassword",{required:"confirmpassword",
+        validate: (value) => value === password || "password mismatch"
+       })}
+       placeholder="confirmpassword" />
+       {errors.confirmpassword && <p>{errors.confirmpassword.message}</p>}
+
+       <div>
+        Gender
+        <label>
+          <input type="radio" value= "Male"
+          {...register("gender",{required:"Gender is mandatory"})}
+           />{" "}
+           Male
+        </label>
+        <label>
+          <input type="radio" value= "Female"
+          {...register("gender",{required:"Gender is mandatory"})}
+           />{" "}
+           Female
+        </label>
+        <label>
+          <input type="radio" value= "other"
+          {...register("gender",{required:"Gender is mandatory"})}
+           />{" "}
+           Other
+        </label>
+        {errors.gender && <p>{errors.gender.message}</p>}
+       </div>
+
+
+       <div>
+        interests
+        <label>
+          <input type="checkbox" value = "Reading"
+          {...register("interests",{required:"select atleast one option"})} />
+          Reading
+        </label>
+        <label>
+          <input type = "checkbox" value = "Travelling" 
+          {...register("interests",{required:"select atleast one option"})}/>
+          Travelling
+        </label>
+         <label>
+          <input type="checkbox" value = "Eating"
+          {...register("interests",{required:"select atleast one option"})} />
+           Eating
+        </label>
+        {errors.interests &&<p>{errors.interests.message}</p>}
+      </div>
+      <select {...register("country", { required: "Country is mandatory" })}>
+        <option value="">Select Country</option>
+        <option value="India">India</option>
+        <option value="USA">USA</option>
+        <option value="Germany">Germany</option>
+      </select>
+      {errors.country && <p>{errors.country.message}</p>}
+
+      <button type="submit">submit</button>   
+    </form>
+  )
+};
+export default RegistrationForm;
+
 
 
 
